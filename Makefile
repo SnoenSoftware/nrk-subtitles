@@ -2,13 +2,14 @@
 
 .PHONY: prod push run down
 
-registry = registry.digitalocean.com
+registry = ghcr.io/bjornsnoen
+image = nrk-subtitles
 
 prod:
-	docker build . -f docker/fastapi/Dockerfile --target=runner -t $(registry)/brbcoffee/site:subs
+	docker build . -f docker/fastapi/Dockerfile --target=runner -t $(registry)/$(image)
 
 push: prod
-	docker push $(registry)/brbcoffee/site:subs
+	docker push $(registry)/$(image)
 
 run: prod
 	docker-compose up -d

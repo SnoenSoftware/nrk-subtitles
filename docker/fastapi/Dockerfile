@@ -43,4 +43,5 @@ COPY --from=backend-builder --chown=nobody /app /app
 COPY --from=backend-builder /etc/nginx /etc/nginx
 COPY --from=frontend-builder /app/frontend/build /app/frontend/build
 ENV API_ROOT_PATH="/api"
+LABEL org.opencontainers.image.source = "https://github.com/bjornsnoen/nrk-subtitles"
 CMD [ "/usr/bin/supervisord" ]
