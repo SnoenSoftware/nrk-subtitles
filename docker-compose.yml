@@ -5,7 +5,7 @@ services:
     build:
       context: "./"
       dockerfile: "./docker/fastapi/Dockerfile"
-    image: "ghcr.io/bjornsnoen/nrk-subtitles"
+    image: "ghcr.io/brbkaffe/nrk-subtitles"
     ports:
       - "80:80"
       - "5678:5678"
