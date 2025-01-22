@@ -7,10 +7,10 @@ RUN sh /app/docker/fastapi/install-deps.sh
 
 WORKDIR /app
 
-COPY Pipfile Pipfile.lock /app/
+COPY uv.lock pyproject.toml /app/
 COPY frontend/package.json frontend/yarn.lock /app/frontend/
-RUN PIPENV_VENV_IN_PROJECT=1 pipenv install
-
+COPY --from=ghcr.io/astral-sh/uv:latest /uv /uvx /bin/
+RUN uv sync
 COPY subtitles /app/subtitles
 COPY frontend/src /app/frontend/src
 COPY frontend/public/ /app/frontend/public
@@ -20,10 +20,11 @@ COPY docker/fastapi/nginx/nginx.conf /etc/nginx/nginx.conf
 COPY docker/fastapi/nginx/application.conf /etc/nginx/conf.d/application.conf
 
 
-FROM node:alpine as frontend-builder
+FROM node:16-alpine as frontend-builder
 COPY --from=backend-builder /app/frontend /app/frontend
 WORKDIR /app/frontend
-RUN yarn install --dev && yarn build
+RUN yarn install 
+RUN yarn build
 
 
 FROM python:3.8-alpine as debug
@@ -43,5 +44,5 @@ COPY --from=backend-builder --chown=nobody /app /app
 COPY --from=backend-builder /etc/nginx /etc/nginx
 COPY --from=frontend-builder /app/frontend/build /app/frontend/build
 ENV API_ROOT_PATH="/api"
-LABEL org.opencontainers.image.source = "https://github.com/brbkaffe/nrk-subtitles"
+LABEL org.opencontainers.image.source = "https://github.com/SnoenSoftware/nrk-subtitles"
 CMD [ "/usr/bin/supervisord" ]

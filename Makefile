@@ -2,7 +2,7 @@
 
 .PHONY: prod push run down
 
-registry = ghcr.io/brbkaffe
+registry = ghcr.io/snoensoftware
 image = nrk-subtitles
 
 prod:
